@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="../static/css/debug.css" th:href="@{/css/debug.css}" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <title>Debug - HubSpot OAuth</title>
+</head>
+<body>
+<h1>HubSpot OAuth Debug</h1>
+<p><strong>Access Token:</strong> <span th:text="${accessToken}"></span></p>
+<p><strong>Refresh Token:</strong> <span th:text="${refreshToken}"></span></p>
+<p><strong>Status:</strong> <span th:text="${status}"></span></p>
+<div th:if="${status == 'Desconectado'}">
+    <button onclick="window.location.href='/install'">Conectar</button>
+</div>
+
+<div th:if="${status == 'Conectado'}">
+    <h2>Criar Novo Contato</h2>
+    <form id="create-contact-form">
+        <div class="form-group">
+            <label for="firstname">Nome:</label>
+            <input type="text" id="firstname" name="firstname" required>
+        </div>
+
+        <div class="form-group">
+            <label for="lastname">Último nome:</label>
+            <input type="text" id="lastname" name="lastname" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <button type="submit">Criar Contato</button>
+    </form>
+</div>
+
+<div th:if="${status == 'Conectado'}">
+    <h2>Contatos</h2>
+    <table class="contact-table">
+        <thead>
+        <tr>
+            <th>VID</th>
+            <th>Nome</th>
+            <th>Sobrenome</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody id="contacts-table-body">
+        <tr th:each="contact : ${contacts}">
+            <td th:text="${contact?.vid ?: 'N/A'}"></td>
+            <td th:text="${contact?.properties?.firstname?.value ?: 'Sem nome'}"></td>
+            <td th:text="${contact?.properties?.lastname?.value ?: 'Sem sobrenome'}"></td>
+            <td th:text="${contact?.getEmail() ?: 'Sem email'}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.getElementById("create-contact-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const firstname = document.getElementById("firstname").value;
+        const lastname = document.getElementById("lastname").value;
+        const email = document.getElementById("email").value;
+
+        if (!firstname || !lastname || !email) {
+            return;
+        }
+
+        const formData = {
+            firstname: firstname,
+            lastname: lastname,
+            email: email
+        };
+
+        fetch("/contact", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+        }).then(response => {
+            if (!response.ok) {
+                return response.text().then(err => { throw new Error(err); });
+            }
+            return response.text();
+        })
+            .then(data => {
+                document.getElementById("create-contact-form").reset();
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    });
+</script>
+
+<script>
+    const socket = new SockJS('https://meetimecaseteste.loca.lt/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        stompClient.subscribe('/topic/webhook', function (message) {
+            alert(message.body);
+            updateContacts();
+        });
+    });
+
+    function updateContacts() {
+        fetch('/contacts')
+            .then(response => response.json())
+            .then(contacts => {
+                const contactsTableBody = document.querySelector('#contacts-table-body');
+                contactsTableBody.innerHTML = '';
+                contacts.forEach(contact => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${contact?.vid || 'N/A'}</td>
+                        <td>${contact?.properties?.firstname?.value || 'Sem nome'}</td>
+                        <td>${contact?.properties?.lastname?.value || 'Sem sobrenome'}</td>
+                        <td>${contact?.email || 'Sem email'}</td>
+                    `;
+                    contactsTableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao atualizar contatos:', error);
+            });
+    }
+</script>
+</body>
+</html>
