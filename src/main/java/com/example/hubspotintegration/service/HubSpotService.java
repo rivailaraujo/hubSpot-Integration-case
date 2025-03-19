@@ -14,9 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.naming.AuthenticationException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class HubSpotService {
@@ -33,7 +31,7 @@ public class HubSpotService {
         String authUrl = UriComponentsBuilder.fromUriString("https://app.hubspot.com/oauth/authorize")
                 .queryParam("client_id", config.getClientId())
                 .queryParam("scope", config.getScopes())
-                .queryParam("redirect_uri", config.getRedirectUri())
+                .queryParam("redirect_uri", config.getBaseUri().concat("/oauth-callback"))
                 .build().toUriString();
 
         return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, authUrl).build();
@@ -65,7 +63,7 @@ public class HubSpotService {
                 HubSpotContactResponse.class
         );
 
-        return response.getBody().getContacts();
+        return Optional.ofNullable(response.getBody()).map(HubSpotContactResponse::getContacts).orElse(Collections.emptyList());
     }
 
     public String createContact(HttpSession session, HubSpotContactRequest contactRequest) throws Exception {
@@ -101,7 +99,6 @@ public class HubSpotService {
                 HttpStatusCode statusCode = e.getStatusCode();
 
                 if (statusCode == HttpStatus.TOO_MANY_REQUESTS) {
-                    // Se for erro 429 (Rate Limit), aguarda e tenta novamente
                     System.out.println("Rate limit atingido. Tentativa " + (retryCount + 1) + " de 5. Aguardando " + waitTime + "ms.");
                     Thread.sleep(waitTime);
 

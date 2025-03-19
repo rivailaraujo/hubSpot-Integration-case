@@ -99,17 +99,16 @@
 </script>
 
 <script>
-    const socket = new SockJS('https://meetimecaseteste.loca.lt/ws');
+    const socket = new SockJS('https://alive-hardly-flamingo.ngrok-free.app/ws');
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function (frame) {
         stompClient.subscribe('/topic/webhook', function (message) {
-            alert(message.body);
             updateContacts();
         });
     });
 
-    function updateContacts() {
+    async function updateContacts() {
         fetch('/contacts')
             .then(response => response.json())
             .then(contacts => {

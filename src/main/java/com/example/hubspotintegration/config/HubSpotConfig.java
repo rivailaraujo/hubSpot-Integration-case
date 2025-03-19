@@ -14,8 +14,8 @@ public class HubSpotConfig {
     @Value("${hubspot.client-secret}")
     private String clientSecret;
 
-    @Value("${hubspot.redirect-uri}")
-    private String redirectUri;
+    @Value("${hubspot.base-uri}")
+    private String baseUri;
 
     @Value("${hubspot.scopes}")
     private String scopes;

@@ -7,21 +7,19 @@ Este projeto é uma aplicação Spring para integração com a API do HubSpot, u
 Antes de rodar a aplicação, você precisará das seguintes ferramentas:
 
 - **Java 17+**: A aplicação usa o Spring Framework, que requer o Java 17 ou superior.
-- **ASDF**: Gerenciador de versões de ferramentas para gerenciar versões de Java, Node.js, e outras dependências.
-- **Localtunnel**: Usado para expor sua aplicação local para a web, útil durante o desenvolvimento.
-
-Obs: O ASDF simplificará a instalação dos requesitos.
+- **ASDF (Opcional)**: Gerenciador de versões de ferramentas para gerenciar versões de Java. Apenas pra facilitar instalação de várias versões java na máquina.
+- **ngrok**: Usado para expor a aplicação local para a web, para parametrização do webhook.
 
 ## 1. Rodando local
 
 
-### 1.1 Instalando o ASDF
+### 1.1 Instalando o ASDF (Opcional)
 
 Se você ainda não tiver o ASDF instalado, siga as instruções abaixo:
 
 - [Instruções de instalação do ASDF](https://asdf-vm.com/#/core-manage-asdf-vm)
 
-### 1.2 Instalando as versões de ferramentas necessárias
+### 1.2 Instalando as versões de ferramentas necessárias  (Opcional)
 
 Com o ASDF instalado, use os seguintes comandos para instalar as versões de Java e Node.js que a aplicação precisa:
 
@@ -30,36 +28,38 @@ Com o ASDF instalado, use os seguintes comandos para instalar as versões de Jav
 # Instalando asdf plugin Java
 asdf plugin-add java
 
-# Instalando asdf plugin node
-asdf plugin-add nodejs
-
 # Rodando dentro da pasta do projeto
 asdf install
 ```
-### 1.3 Instalar localtunnel
+### 1.3 Instalar ngrok
+[Instruções de instalação do ngrok, siga o Step 1](https://ngrok.com/docs/getting-started/)
+
+
+### 1.4. Adicione o token do ngrok
 ```bash
 
-npm install -g localtunnel
+ngrok config add-authtoken 2uVoxr4hwv8UFtnRedsVnJrxCok_7Ace8kwPTrH3bCNsjksGq
 ```
 
-### 1.4. Rode a aplicação
+
+
+### 1.5 Rode o ngRok
+```bash
+
+ngrok http --url=alive-hardly-flamingo.ngrok-free.app 8080
+```
+### 1.6 Rode a aplicação
 ```bash
 
 ./gradlew bootRun
 ```
 
-### 1.5 Rode o localtunnel
-```bash
-
-# Em outro terminal rode:
-lt -p 8080 -s meetimecaseteste
-```
-
-### 1.6. Acesso
-Acesse aplicação a partir de https://meetimecaseteste.loca.lt
+### 1.7. Acesso
+Acesse aplicação a partir de https://alive-hardly-flamingo.ngrok-free.app
 
 
 ## 2. Rodando pelo docker
+Obs: Webhokk
 ```bash
 
 sudo docker-compose build

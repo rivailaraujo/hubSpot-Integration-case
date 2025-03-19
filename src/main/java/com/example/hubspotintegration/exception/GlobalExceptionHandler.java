@@ -1,5 +1,6 @@
 package com.example.hubspotintegration.exception;
 
+import com.example.hubspotintegration.config.HubSpotConfig;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +13,15 @@ import java.io.IOException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private final HubSpotConfig config;
+
+    GlobalExceptionHandler(HubSpotConfig config) {
+        this.config = config;
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     public void handleAuthenticationException(HttpServletResponse response) throws IOException {
-        response.sendRedirect("https://meetimecaseteste.loca.lt/install");
+        response.sendRedirect(config.getBaseUri().concat("/install"));
     }
 
     @ExceptionHandler(UserExistsException.class)

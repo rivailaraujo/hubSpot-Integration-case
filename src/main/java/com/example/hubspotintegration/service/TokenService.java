@@ -20,6 +20,7 @@ public class TokenService {
     private final HubSpotConfig config;
     private final Cache<String, String> accessTokenCache;
     private final Cache<String, String> refreshTokenStore;
+    private final String tokenEndpoint = "https://api.hubapi.com/oauth/v1/token";
 
     public TokenService(HubSpotConfig config) {
         this.config = config;
@@ -57,7 +58,7 @@ public class TokenService {
                 .grantType("authorization_code")
                 .clientSecret(config.getClientSecret())
                 .clientId(config.getClientId())
-                .redirectUri(config.getRedirectUri())
+                .redirectUri(config.getBaseUri().concat("/oauth-callback"))
                 .code(authCode)
                 .build();
 
@@ -67,7 +68,7 @@ public class TokenService {
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody.toFormData(), headers);
 
         ResponseEntity<HubSpotTokenResponse> response = restTemplate.exchange(
-                "https://api.hubapi.com/oauth/v1/token",
+                this.tokenEndpoint,
                 HttpMethod.POST,
                 requestEntity,
                 HubSpotTokenResponse.class
@@ -94,8 +95,6 @@ public class TokenService {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = "https://api.hubapi.com/oauth/v1/token";
-
         HubSpotTokenRequest requestBody = HubSpotTokenRequest.builder()
                 .grantType("refresh_token")
                 .clientSecret(config.getClientSecret())
@@ -109,7 +108,7 @@ public class TokenService {
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody.toFormData(), headers);
 
-        ResponseEntity<HubSpotTokenResponse> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, HubSpotTokenResponse.class);
+        ResponseEntity<HubSpotTokenResponse> response = restTemplate.exchange(this.tokenEndpoint, HttpMethod.POST, requestEntity, HubSpotTokenResponse.class);
 
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             String newAccessToken = response.getBody().getAccessToken();
