@@ -1,7 +1,6 @@
 # Projeto HubSpot OAuth Debug
 
-Este projeto é uma aplicação Spring para integração com a API do HubSpot, usando OAuth. A aplicação também integra com WebSockets via SockJS e Stomp.
-
+Este projeto é uma aplicação Spring para integração com a API do HubSpot, usando OAuth.
 ## Requisitos
 
 Antes de rodar a aplicação, você precisará das seguintes ferramentas:
@@ -9,6 +8,8 @@ Antes de rodar a aplicação, você precisará das seguintes ferramentas:
 - **Java 17+**: A aplicação usa o Spring Framework, que requer o Java 17 ou superior.
 - **ASDF (Opcional)**: Gerenciador de versões de ferramentas para gerenciar versões de Java. Apenas pra facilitar instalação de várias versões java na máquina.
 - **ngrok**: Usado para expor a aplicação local para a web, para parametrização do webhook.
+
+#### Rode a aplicação seguindo a etapa 1 ou 2.
 
 ## 1. Rodando local
 
@@ -54,17 +55,19 @@ ngrok http --url=alive-hardly-flamingo.ngrok-free.app 8080
 ./gradlew bootRun
 ```
 
-### 1.7. Acesso
-Acesse aplicação a partir de https://alive-hardly-flamingo.ngrok-free.app
-
-
-## 2. Rodando pelo docker
-Obs: Webhokk
+## 2. Rodando pelo docker-compose
+[Instruções de instalação docker-compose](https://docs.docker.com/compose/install/)
 ```bash
 
-sudo docker-compose build
+#Na raiz do projeto
 sudo docker-compose up
-
-#ou
-sudo docker-compose up --build
 ```
+
+## 3. Acesso
+Acesse aplicação a partir de https://alive-hardly-flamingo.ngrok-free.app
+### 3.1 Tela esperada
+![img_1.png](img_1.png)
+
+### 3.2 Tela autenticada
+![img.png](img.png)
+
