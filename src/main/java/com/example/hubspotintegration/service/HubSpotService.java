@@ -86,7 +86,7 @@ public class HubSpotService {
         long waitTime = 1000;
         RestTemplate restTemplate = new RestTemplate();
 
-        while (retryCount < 5) {
+        while (retryCount < 4) {
             try {
                 ResponseEntity<String> response = restTemplate.exchange(
                         url,

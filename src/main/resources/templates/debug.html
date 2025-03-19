@@ -102,8 +102,8 @@
     const socket = new SockJS('https://alive-hardly-flamingo.ngrok-free.app/ws');
     const stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function (frame) {
-        stompClient.subscribe('/topic/webhook', function (message) {
+    stompClient.connect({}, function () {
+        stompClient.subscribe('/topic/webhook', function () {
             updateContacts();
         });
     });
