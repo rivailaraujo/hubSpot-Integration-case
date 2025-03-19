@@ -66,7 +66,7 @@ sudo docker-compose up
 
 ## 3. Acesso
 Acesse aplicação a partir de https://alive-hardly-flamingo.ngrok-free.app
-A tabela de contatos deve atualizar sozinha ao criar um usuario pelo hubSpot ou pela aplicação por causa do webhook.
+#### A tabela de contatos deve atualizar sozinha ao criar um usuario pelo hubSpot ou pela aplicação via webhook.
 
 ### 3.1 Tela esperada
 ![img_1.png](img_1.png)
