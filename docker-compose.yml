@@ -8,21 +8,21 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - app-network  # Definindo a rede personalizada
+      - app-network
 
   ngrok:
     image: ngrok/ngrok:latest
     command:
       - "http"
-      - "http://spring-app:8080"  # Usando o nome do serviço como hostname
+      - "http://spring-app:8080"
       - "--domain=alive-hardly-flamingo.ngrok-free.app"
     environment:
       NGROK_AUTHTOKEN: "2uVoxr4hwv8UFtnRedsVnJrxCok_7Ace8kwPTrH3bCNsjksGq"
     ports:
       - "4040:4040"
     networks:
-      - app-network  # Definindo a rede personalizada
+      - app-network
 
 networks:
-  app-network:  # Definindo a rede personalizada
+  app-network:
     driver: bridge
