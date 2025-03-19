@@ -1,6 +1,7 @@
 # Projeto HubSpot OAuth Debug
 
 Este projeto é uma aplicação Spring para integração com a API do HubSpot, usando OAuth.
+- [README TECH](./README_TECH.md) - Detalhes técnicos sobre o projeto.
 ## Requisitos
 
 Antes de rodar a aplicação, você precisará das seguintes ferramentas:
