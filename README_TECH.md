@@ -52,7 +52,7 @@ Criado um GlobalExceptionHandler usado pra tratar basicamente as duas exceptions
 AuthenticationException e UserExistsException.
 Redirecionando para o endpoint de autenticação ou tratando a mensagem para a view.
 
-## 4. Sobre a validação do Webhook Hubspot
+## 4. Sobre segurança na validação do Webhook Hubspot
 [Segundo as instruções da API Webhook](https://developers.hubspot.com/docs/guides/apps/authentication/validating-requests)
 o "x-hubspot-signature" é usado no HubSpotWebHookService->calculateSignature para garantir que as solicitações estejam realmente vindo do HubSpot
 
@@ -60,7 +60,7 @@ o "x-hubspot-signature" é usado no HubSpotWebHookService->calculateSignature pa
 Os tokens estão sendo salvos com base no HttpSession. Assim é possivel abrir a aplicação em outro navegador caso queira testar com outra conta HubSpot
 
 ## 6. Sobre Rate limit na criação de contatos
-Pelo tempo acabei implementando um simples ExponentialBackoff fazendo tentativas e dobrando o tempo de espera entre elas, tentativas essas definidas em 4 o que pode levar a um periodo total de 15s de tentativa da request, que comtempla o reset do rate limit da API de 110 reqs/10seg
+Pelo tempo acabei implementando um simples ExponentialBackoff no caso de receber um TOO_MANY_REQUESTS (429) fazendo tentativas e dobrando o tempo de espera entre elas, tentativas essas definidas em 4 o que pode levar a um periodo total de 15s de tentativa da request, que comtempla o reset do rate limit da API de 110 reqs/10seg
 
 ## 7. Sobre Melhorias futuras
 - Melhorar solução descrita no tópico 6, talvez usando Token Bucket.
