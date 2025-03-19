@@ -63,5 +63,5 @@ Os tokens estão sendo salvos com base no HttpSession. Assim é possivel abrir a
 Pelo tempo acabei implementando um simples ExponentialBackoff fazendo tentativas e dobrando o tempo de espera entre elas, tentativas essas definidas em 4 o que pode levar a um periodo total de 15s de tentativa da request, que comtempla o reset do rate limit da API de 110 reqs/10seg
 
 ## 7. Sobre Melhorias futuras
-- Melhorar solução descrita no tópico 6, talvez usando Token.
+- Melhorar solução descrita no tópico 6, talvez usando Token Bucket.
 - Vincular as conexões do websocket ao session também, semelhante ao que é feito com token.
