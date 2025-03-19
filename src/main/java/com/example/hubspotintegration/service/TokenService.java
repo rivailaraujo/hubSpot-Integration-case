@@ -74,13 +74,12 @@ public class TokenService {
                 HubSpotTokenResponse.class
         );
 
-        if (response.getStatusCode() == HttpStatus.OK) {
-            if (response.getBody() != null) {
-                String accessToken = response.getBody().getAccessToken();
-                String refreshToken = response.getBody().getRefreshToken();
-                saveTokens(sessionId, accessToken, refreshToken);
-                return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("/")).build();
-            }
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+            String accessToken = response.getBody().getAccessToken();
+            String refreshToken = response.getBody().getRefreshToken();
+            saveTokens(sessionId, accessToken, refreshToken);
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("/")).build();
+
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Falha na autenticação com o HubSpot.");
